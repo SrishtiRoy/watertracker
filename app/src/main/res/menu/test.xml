@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_stats"
+        android:title="Stats"
+        app:cnb_iconColor="@color/home"/>
+
+    <item
+        android:id="@+id/activity"
+        android:icon="@drawable/ic_settings"
+        android:title="Settings"
+        app:cnb_iconColor="@color/home"/>
+
+    <item
+        android:id="@+id/favorites"
+        android:icon="@drawable/ic_lightbulb_outline_black_24dp"
+        android:title="Info"
+        app:cnb_iconColor="@color/home"/>
+
+
+</menu>
