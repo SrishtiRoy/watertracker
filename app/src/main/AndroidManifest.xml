@@ -42,8 +42,7 @@
     <activity android:name=".InitUserInfoActivity"
         android:screenOrientation="portrait">
     </activity>
-
-        <activity android:name=".Onboarding.OnboardingActivity"
+        <activity android:name=".onboardingscreen.OnboardingActivity"
             android:screenOrientation="portrait">
         </activity>
         <receiver android:name=".recievers.NotifierReceiver"/>

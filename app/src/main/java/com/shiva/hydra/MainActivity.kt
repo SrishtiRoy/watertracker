@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.widget.Toast
@@ -18,7 +19,6 @@ import com.daimajia.androidanimations.library.YoYo
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
-import com.shiva.hydra.Onboarding.OnboardingActivity
 import com.shiva.hydra.OutlinesFragments.OutlineActivity
 import com.shiva.hydra.R
 import com.shiva.hydra.fragments.BottomSheetFragment
@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private var snackbar: Snackbar? = null
     private var doubleBackToExitPressedOnce = false
     private val menu by lazy { findViewById<ChipNavigationBar>(R.id.bottom_menu) }
+    private var progressInfo: Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,10 +53,10 @@ class MainActivity : AppCompatActivity() {
 
         totalIntake = sharedPref.getInt(AppUtils.TOTAL_INTAKE, 0)
 
-        if (sharedPref.getBoolean(AppUtils.FIRST_RUN_KEY, true)) {
+       /* if (sharedPref.getBoolean(AppUtils.FIRST_RUN_KEY, true)) {
             startActivity(Intent(this, OnboardingActivity::class.java))
             finish()
-        }
+        }*/
 
         dateNow = AppUtils.getCurrentDate()!!
 
@@ -275,16 +276,25 @@ class MainActivity : AppCompatActivity() {
         alertDialogBuilder.setPositiveButton("OK") { dialog, id ->
 
             if (selectedOption != null) {
-                if ((inTook * 100 / totalIntake) <= 140) {
-                    if (sqliteHelper.addIntook(dateNow, selectedOption!!) > 0) {
-                        inTook += selectedOption!!
-                        setWaterLevel(inTook, totalIntake)
+                if(progressInfo<=100){
 
-                        Snackbar.make(promptsView, "Your water intake was saved...!!", Snackbar.LENGTH_SHORT)
-                            .show()
+                    if ((inTook * 100 / totalIntake) <= 140) {
+                        if (sqliteHelper.addIntook(dateNow, selectedOption!!) > 0) {
+                            inTook += selectedOption!!
+                            setWaterLevel(inTook, totalIntake)
 
+                            Snackbar.make(
+                                promptsView,
+                                "Your water intake was saved...!!",
+                                Snackbar.LENGTH_SHORT
+                            )
+                                .show()
+
+                        }
                     }
                 } else {
+                    Log.e("value","jj")
+
                     Snackbar.make(promptsView, "You already achieved the goal", Snackbar.LENGTH_SHORT).show()
                 }
                 selectedOption = null
@@ -311,17 +321,28 @@ class MainActivity : AppCompatActivity() {
         YoYo.with(Techniques.SlideInDown)
             .duration(500)
             .playOn(tvIntook)
+        progressInfo = ((inTook / totalIntake.toFloat()) * 100).toInt()
+        if(progressInfo<=100){
+
         tvIntook.text = "$inTook"
         tvTotalIntake.text = "/$totalIntake ml"
-        val progress = ((inTook / totalIntake.toFloat()) * 100).toInt()
         YoYo.with(Techniques.Pulse)
             .duration(500)
             .playOn(intakeProgress)
-        intakeProgress.progress = progress
-        if ((inTook * 100 / totalIntake) > 140) {
+        intakeProgress.progress = progressInfo
+            if(inTook>0){
+                var  value=inTook/totalIntake
+                value=value*100;
+                Log.e("value",""+value)
+                Log.e("progresss",""+progressInfo)
+
+                //if ((inTook * 100 / totalIntake) > 140) {
+
+        }
+        }
+        else
             Snackbar.make(main_activity_parent, "You achieved the goal", Snackbar.LENGTH_SHORT)
                 .show()
-        }
     }
 
 
